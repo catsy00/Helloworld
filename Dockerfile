@@ -1,7 +1,7 @@
-FROM python:3.4
+FROM registry.redhat.io/rhscl/python-36-rhel7 
 
 RUN pip install Flask==0.10.1
-WORKDIR	/app
-COPY	app /app
+WORKDIR	app
+COPY	app /home/py/app
 
-CMD ["python","/app/identidock.py"]
+CMD ["python","/home/py/app/identidock.py"]
