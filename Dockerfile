@@ -1,7 +1,12 @@
-FROM registry.redhat.io/rhscl/python-36-rhel7 
+FROM python:latest
 
-RUN pip install Flask==0.10.1
-WORKDIR	app
-COPY	app /home/py/app
+#RUN useradd -r -g wheel uwsgi 
+#RUN pip install Flask==0.10.1 uWSGI==2.0.8
+#WORKDIR	app
+#COPY	app /home/py/app
 
-CMD ["python","/home/py/app/identidock.py"]
+#EXPOSE 9090 9191
+#USER    uwsgi
+
+#CMD ["uwsgi","--http","0.0.0.0:9090","--wsgi-file","/home/py/app/identidock.py","--callable","app","--stats","0.0.0.0:9191" ]
+CMD ["cat", "/etc/passwd"]
