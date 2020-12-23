@@ -1,0 +1,56 @@
+kind: DeploymentConfig
+apiVersion: apps.openshift.io/v1
+metadata:
+  name: helloworld
+  namespace: myproject2
+  labels:
+    app: helloworld
+    app.kubernetes.io/component: helloworld
+    app.kubernetes.io/instance: helloworld
+    app.kubernetes.io/part-of: helloworld-app
+spec:
+  strategy:
+    type: Rolling
+    rollingParams:
+      updatePeriodSeconds: 1
+      intervalSeconds: 1
+      timeoutSeconds: 600
+      maxUnavailable: 25%
+      maxSurge: 25%
+    resources: {}
+    activeDeadlineSeconds: 21600
+  triggers:
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+          - helloworld
+        from:
+          kind: ImageStreamTag
+          namespace: myproject2
+          name: 'helloworld:latest'
+    - type: ConfigChange
+  replicas: 1
+  revisionHistoryLimit: 10
+  test: false
+  selector:
+    app: helloworld
+    deploymentconfig: helloworld
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: helloworld
+        deploymentconfig: helloworld
+    spec:
+      containers:
+        - name: helloworld
+          image: >-
+            image-registry.openshift-image-registry.svc:5000/myproject2/helloworld@sha256:830dbf516f1deb3470626a5bd75fce5cce41676c6f1b4b12c4686c2c445f1627
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: Always
+        - name: curl-test
+          image: registry.redhat.io/rhel8/support-tools
+          command: ['sh', '-c', "while true; do date; sleep 1; done;" ]
